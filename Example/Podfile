@@ -1,0 +1,12 @@
+source 'https://github.com/CocoaPods/Specs.git'
+
+target 'NHMessageBubbleCell', :exclusive => true do
+  pod "NHMessageBubbleCell", :path => "../"
+end
+
+target 'Tests', :exclusive => true do
+  pod "NHMessageBubbleCell", :path => "../"
+
+  pod 'Specta'
+  pod 'Expecta'
+end
