@@ -73,8 +73,8 @@ const NSUInteger kNHEnabledConstraintPriority = 900;
 }
 
 - (void)awakeFromNib {
-    [self setupBubble];
-    [self setupViews];
+//    [self setupBubble];
+//    [self setupViews];
 }
 
 - (void)setupBubble {
