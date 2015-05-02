@@ -10,19 +10,19 @@
 Pod::Spec.new do |s|
   s.name             = "NHMessageBubbleCell"
   s.version          = "0.1.0"
-  s.summary          = "A short description of NHMessageBubbleCell."
-  s.description      = <<-DESC
-                       An optional longer description of NHMessageBubbleCell
-
-                       * Markdown format.
-                       * Don't worry about the indent, we strip it!
-                       DESC
+  s.summary          = "Custom table view cell for displaying message bubbles"
+#s.description      = <<-DESC
+#                       An optional longer description of NHMessageBubbleCell
+#
+#                       * Markdown format.
+#                       * Don't worry about the indent, we strip it!
+#                       DESC
   s.homepage         = "https://github.com/naithar/NHMessageBubbleCell"
   # s.screenshots     = "www.example.com/screenshots_1", "www.example.com/screenshots_2"
   s.license          = 'MIT'
   s.author           = { "Naithar" => "devias.naith@gmail.com" }
   s.source           = { :git => "https://github.com/naithar/NHMessageBubbleCell.git", :tag => s.version.to_s }
-  # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
+  # s.social_media_url = 'https://twitter.com/naithar'
 
   s.platform     = :ios, '7.0'
   s.requires_arc = true
