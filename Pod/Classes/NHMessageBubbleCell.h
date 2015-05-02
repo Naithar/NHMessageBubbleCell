@@ -24,6 +24,8 @@ typedef NS_ENUM(NSUInteger, NHMessageBubbleType) {
 //contentinsets
 //offsets
 
+@property (nonatomic, assign) CGSize minMessageContainerSize;
+@property (nonatomic, assign) UIEdgeInsets messageContainerInset;
 @property (nonatomic, assign) NHMessageBubbleType bubbleType;
 @property (nonatomic, assign) BOOL hasTail;
 

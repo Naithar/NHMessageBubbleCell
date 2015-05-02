@@ -80,6 +80,8 @@ const NSUInteger kNHEnabledConstraintPriority = 900;
 - (void)setupBubble {
     _bubbleType = NHMessageBubbleTypeOutgoing;
     _hasTail = NO;
+    _messageContainerInset = UIEdgeInsetsZero;
+    _minMessageContainerSize = CGSizeMake(40, 35);
 }
 
 - (void)setupMaskImage {
@@ -117,7 +119,7 @@ const NSUInteger kNHEnabledConstraintPriority = 900;
                                                         relatedBy:NSLayoutRelationGreaterThanOrEqual
                                                            toItem:self.messageContainer
                                                         attribute:NSLayoutAttributeHeight
-                                                       multiplier:0 constant:35];
+                                                       multiplier:0 constant:self.minMessageContainerSize.height];
 
     [self.messageContainer addConstraint:self.minMessageHeight];
 
@@ -127,7 +129,7 @@ const NSUInteger kNHEnabledConstraintPriority = 900;
                                                         relatedBy:NSLayoutRelationGreaterThanOrEqual
                                                            toItem:self.messageContainer
                                                         attribute:NSLayoutAttributeWidth
-                                                       multiplier:0 constant:35];
+                                                       multiplier:0 constant:self.minMessageContainerSize.width];
 
     [self.messageContainer addConstraint:self.minMessageWidth];
 
@@ -138,7 +140,7 @@ const NSUInteger kNHEnabledConstraintPriority = 900;
                                                                     toItem:self.contentView
                                                                  attribute:NSLayoutAttributeTop
                                                                 multiplier:1.0
-                                                                  constant:0];
+                                                                  constant:self.messageContainerInset.top];
 
 
     self.bottomMessageOffset = [NSLayoutConstraint constraintWithItem:self.messageContainer
@@ -147,7 +149,7 @@ const NSUInteger kNHEnabledConstraintPriority = 900;
                                                                toItem:self.contentView
                                                             attribute:NSLayoutAttributeBottom
                                                            multiplier:1.0
-                                                             constant:0];
+                                                             constant:-self.messageContainerInset.bottom];
 
 
 
@@ -157,7 +159,7 @@ const NSUInteger kNHEnabledConstraintPriority = 900;
                                                                      toItem:self.contentView
                                                                   attribute:NSLayoutAttributeLeft
                                                                  multiplier:1.0
-                                                                   constant:0];
+                                                                   constant:self.messageContainerInset.left];
 
 
 
@@ -167,7 +169,7 @@ const NSUInteger kNHEnabledConstraintPriority = 900;
                                                                       toItem:self.contentView
                                                                    attribute:NSLayoutAttributeRight
                                                                   multiplier:1.0
-                                                                    constant:0];
+                                                                    constant:-self.messageContainerInset.right];
 
 
 
@@ -196,7 +198,7 @@ const NSUInteger kNHEnabledConstraintPriority = 900;
         [messageLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
         messageLabel.backgroundColor = [UIColor greenColor];
         messageLabel.lineBreakMode = NSLineBreakByWordWrapping;
-        messageLabel.text = @"dsa das das das";
+        messageLabel.text = @"d";
         messageLabel.numberOfLines = 0;
 
         [self.messageContainer addSubview:messageLabel];
@@ -292,6 +294,28 @@ const NSUInteger kNHEnabledConstraintPriority = 900;
         [self setupMaskImage];
         [self didChangeValueForKey:@"hasTail"];
     }
+}
+
+- (void)setMessageContainerInset:(UIEdgeInsets)messageContainerInset {
+    [self willChangeValueForKey:@"messageContainerInset"];
+    _messageContainerInset = messageContainerInset;
+
+    self.topMessageOffset.constant = messageContainerInset.top;
+    self.leftMessageOffset.constant = messageContainerInset.left;
+    self.rightMessageOffset.constant = -messageContainerInset.right;
+    self.bottomMessageOffset.constant = -messageContainerInset.bottom;
+
+    [self didChangeValueForKey:@"messageContainerInset"];
+}
+
+- (void)setMinMessageContainerSize:(CGSize)minMessageContainerSize {
+    [self willChangeValueForKey:@"minMessageContainerSize"];
+    _minMessageContainerSize = minMessageContainerSize;
+
+    self.minMessageWidth.constant = minMessageContainerSize.width;
+    self.minMessageHeight.constant = minMessageContainerSize.height;
+
+    [self didChangeValueForKey:@"minMessageContainerSize"];
 }
 
 - (void)resetMask {
