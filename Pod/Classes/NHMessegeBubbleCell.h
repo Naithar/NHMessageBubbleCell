@@ -11,6 +11,10 @@
 @interface NHMessegeBubbleCell : UITableViewCell
 
 //mask image
+//contentinsets
+//offsets
+//type (left, right)
+
 @property (nonatomic, readonly, strong) UIView *messageContainer;
 
 @end

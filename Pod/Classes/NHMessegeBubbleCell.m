@@ -94,13 +94,11 @@
 
     NSLayoutConstraint *topOffset = [NSLayoutConstraint constraintWithItem:self.messageContainer
                                                                  attribute:NSLayoutAttributeTop
-                                                                 relatedBy:NSLayoutRelationGreaterThanOrEqual
+                                                                 relatedBy:NSLayoutRelationEqual
                                                                     toItem:self.contentView
                                                                  attribute:NSLayoutAttributeTop
                                                                 multiplier:1.0
                                                                   constant:0];
-
-//    topOffset.priority = UILayoutPriorityDefaultHigh;
     [self.contentView addConstraint:topOffset];
 
     NSLayoutConstraint *bottomOffset = [NSLayoutConstraint constraintWithItem:self.messageContainer
@@ -122,7 +120,7 @@
                                                                  multiplier:1.0
                                                                    constant:0];
     leftOffset.priority = UILayoutPriorityDefaultLow;
-    
+
     [self.contentView addConstraint:leftOffset];
 
     NSLayoutConstraint *rightOffset = [NSLayoutConstraint constraintWithItem:self.messageContainer
@@ -192,18 +190,16 @@
 
     self.messageMaskView = [[UIImageView alloc] init];
     self.messageMaskView.image = maskImage;
+}
 
-    [self.contentView setNeedsLayout];
-    [self.contentView layoutIfNeeded];
+- (void)layoutSubviews {
+    [super layoutSubviews];
 
     [self resetMask];
 }
 
-
 - (void)prepareForReuse {
     [super prepareForReuse];
-
-    [self resetMask];
 }
 
 - (void)resetMask {
