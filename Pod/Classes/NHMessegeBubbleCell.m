@@ -81,41 +81,111 @@
                                                                        relatedBy:NSLayoutRelationGreaterThanOrEqual
                                                                           toItem:self.messageContainer
                                                                        attribute:NSLayoutAttributeHeight
-                                                                      multiplier:0 constant:44]];
+                                                                      multiplier:0 constant:35]];
+
+    [self.messageContainer addConstraint:[NSLayoutConstraint constraintWithItem:self.messageContainer
+                                                                      attribute:NSLayoutAttributeWidth
+                                                                      relatedBy:NSLayoutRelationGreaterThanOrEqual
+                                                                         toItem:self.messageContainer
+                                                                      attribute:NSLayoutAttributeWidth
+                                                                     multiplier:0 constant:35]];
 
 
 
-    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.messageContainer
+    NSLayoutConstraint *topOffset = [NSLayoutConstraint constraintWithItem:self.messageContainer
                                                                  attribute:NSLayoutAttributeTop
-                                                                 relatedBy:NSLayoutRelationEqual
+                                                                 relatedBy:NSLayoutRelationGreaterThanOrEqual
                                                                     toItem:self.contentView
                                                                  attribute:NSLayoutAttributeTop
                                                                 multiplier:1.0
-                                                                  constant:0]];
+                                                                  constant:0];
 
-    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.messageContainer
-                                                                 attribute:NSLayoutAttributeBottom
-                                                                 relatedBy:NSLayoutRelationEqual
-                                                                    toItem:self.contentView
-                                                                 attribute:NSLayoutAttributeBottom
-                                                                multiplier:1.0
-                                                                  constant:0]];
+//    topOffset.priority = UILayoutPriorityDefaultHigh;
+    [self.contentView addConstraint:topOffset];
 
-    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.messageContainer
+    NSLayoutConstraint *bottomOffset = [NSLayoutConstraint constraintWithItem:self.messageContainer
+                                 attribute:NSLayoutAttributeBottom
+                                 relatedBy:NSLayoutRelationEqual
+                                    toItem:self.contentView
+                                 attribute:NSLayoutAttributeBottom
+                                multiplier:1.0
+                                                                     constant:0];
+//    bottomOffset.priority = UILayoutPriorityDefaultHigh;
+
+    [self.contentView addConstraint:bottomOffset];
+
+    NSLayoutConstraint *leftOffset = [NSLayoutConstraint constraintWithItem:self.messageContainer
+                                                                  attribute:NSLayoutAttributeLeft
+                                                                  relatedBy:NSLayoutRelationEqual
+                                                                     toItem:self.contentView
+                                                                  attribute:NSLayoutAttributeLeft
+                                                                 multiplier:1.0
+                                                                   constant:0];
+    leftOffset.priority = UILayoutPriorityDefaultLow;
+    
+    [self.contentView addConstraint:leftOffset];
+
+    NSLayoutConstraint *rightOffset = [NSLayoutConstraint constraintWithItem:self.messageContainer
+                                                                   attribute:NSLayoutAttributeRight
+                                                                   relatedBy:NSLayoutRelationEqual
+                                                                      toItem:self.contentView
+                                                                   attribute:NSLayoutAttributeRight
+                                                                  multiplier:1.0
+                                                                    constant:0];
+
+    rightOffset.priority = UILayoutPriorityDefaultHigh;
+
+    [self.contentView addConstraint:rightOffset];
+
+
+    UILabel *messageLabel = [[UILabel alloc] init];
+    messageLabel.opaque = YES;
+    [messageLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
+    messageLabel.backgroundColor = [UIColor greenColor];
+    messageLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    messageLabel.text = @"dsadsa dsad sadsadasda dad asd a sd sad asd asd a";
+    messageLabel.numberOfLines = 0;
+
+    [self.messageContainer addSubview:messageLabel];
+
+    [messageLabel addConstraint:[NSLayoutConstraint constraintWithItem:messageLabel
+                                                             attribute:NSLayoutAttributeWidth
+                                                             relatedBy:NSLayoutRelationLessThanOrEqual
+                                                                toItem:messageLabel
+                                                             attribute:NSLayoutAttributeWidth
+                                                            multiplier:0 constant:200]];
+
+    [self.messageContainer addConstraint:[NSLayoutConstraint constraintWithItem:messageLabel
                                                                  attribute:NSLayoutAttributeLeft
                                                                  relatedBy:NSLayoutRelationEqual
-                                                                    toItem:self.contentView
+                                                                    toItem:self.messageContainer
                                                                  attribute:NSLayoutAttributeLeft
                                                                 multiplier:1.0
-                                                                  constant:0]];
+                                                                  constant:5]];
 
-    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.messageContainer
-                                                                 attribute:NSLayoutAttributeRight
-                                                                 relatedBy:NSLayoutRelationEqual
-                                                                    toItem:self.contentView
-                                                                 attribute:NSLayoutAttributeRight
-                                                                multiplier:1.0
-                                                                  constant:0]];
+    [self.messageContainer addConstraint:[NSLayoutConstraint constraintWithItem:messageLabel
+                                                                      attribute:NSLayoutAttributeRight
+                                                                      relatedBy:NSLayoutRelationEqual
+                                                                         toItem:self.messageContainer
+                                                                      attribute:NSLayoutAttributeRight
+                                                                     multiplier:1.0
+                                                                       constant:-10]];
+
+    [self.messageContainer addConstraint:[NSLayoutConstraint constraintWithItem:messageLabel
+                                                                      attribute:NSLayoutAttributeTop
+                                                                      relatedBy:NSLayoutRelationEqual
+                                                                         toItem:self.messageContainer
+                                                                      attribute:NSLayoutAttributeTop
+                                                                     multiplier:1.0
+                                                                       constant:5]];
+
+    [self.messageContainer addConstraint:[NSLayoutConstraint constraintWithItem:messageLabel
+                                                                      attribute:NSLayoutAttributeBottom
+                                                                      relatedBy:NSLayoutRelationEqual
+                                                                         toItem:self.messageContainer
+                                                                      attribute:NSLayoutAttributeBottom
+                                                                     multiplier:1.0
+                                                                       constant:-5]];
 
     //use custom
     UIImage *maskImage = [[UIImage imageNamed:@"mask.bubble-tail"] resizableImageWithCapInsets:UIEdgeInsetsMake(16, 18, 16, 25) resizingMode:UIImageResizingModeTile];

@@ -32,6 +32,10 @@
     // Dispose of any resources that can be recreated.
 }
 
+//- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath {
+//    return 35;
+//}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return 50;
 }
@@ -39,6 +43,8 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
 
+//    [cell.contentView setNeedsLayout];
+//    [cell.contentView layoutIfNeeded];
 //    cell.textLabel.text = [NSString stringWithFormat:@"%@", indexPath];
     return cell;
 }
