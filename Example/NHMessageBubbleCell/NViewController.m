@@ -7,7 +7,7 @@
 //
 
 #import "NViewController.h"
-#import <NHMessegeBubbleCell.h>
+#import <NHMessageBubbleCell.h>
 
 @interface NViewController ()<UITableViewDelegate, UITableViewDataSource>
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
@@ -23,7 +23,8 @@
 
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
-    [self.tableView registerClass:[NHMessegeBubbleCell class] forCellReuseIdentifier:@"cell"];
+    self.tableView.rowHeight = 100;
+    [self.tableView registerClass:[NHMessageBubbleCell class] forCellReuseIdentifier:@"cell"];
 }
 
 - (void)didReceiveMemoryWarning

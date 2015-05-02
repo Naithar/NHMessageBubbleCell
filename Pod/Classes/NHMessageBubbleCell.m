@@ -1,0 +1,304 @@
+//
+//  NHMessegeBubbleCell.m
+//  Pods
+//
+//  Created by Naithar on 02.05.15.
+//
+//
+
+#import "NHMessageBubbleCell.h"
+
+const NSUInteger kNHDisabledConstraintPriority = 1;
+const NSUInteger kNHEnabledConstraintPriority = 900;
+
+@interface NHMessageBubbleCell ()
+
+@property (nonatomic, strong) UIView *messageContainer;
+@property (nonatomic, strong) UIImageView *messageMaskView;
+
+@property (nonatomic, strong) NSLayoutConstraint *topMessageOffset;
+@property (nonatomic, strong) NSLayoutConstraint *leftMessageOffset;
+@property (nonatomic, strong) NSLayoutConstraint *rightMessageOffset;
+@property (nonatomic, strong) NSLayoutConstraint *bottomMessageOffset;
+@property (nonatomic, strong) NSLayoutConstraint *minMessageHeight;
+@property (nonatomic, strong) NSLayoutConstraint *minMessageWidth;
+
+@end
+
+@implementation NHMessageBubbleCell
+
+- (instancetype)init {
+    self = [super init];
+
+    if (self) {
+        [self commonInit];
+    }
+
+    return self;
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+
+    if (self) {
+        [self commonInit];
+    }
+
+    return self;
+}
+
+- (instancetype)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+
+    if (self) {
+        [self commonInit];
+    }
+
+    return self;
+}
+
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+
+    if (self) {
+        [self commonInit];
+    }
+
+    return self;
+}
+
+- (void)commonInit {
+    [self setupBubble];
+    [self setupViews];
+}
+
+- (void)awakeFromNib {
+    [self setupBubble];
+    [self setupViews];
+}
+
+- (void)setupBubble {
+    _bubbleType = NHMessageBubbleTypeOutgoing;
+    _hasTail = NO;
+}
+
+- (void)setupMaskImage {
+
+    if (!self.maskImage) {
+        if (self.bubbleType == NHMessageBubbleTypeOutgoing) {
+            self.messageMaskView.image = self.hasTail
+            ? [NHBubbleMaskProvider defaultOutgoingTailBubble]
+            : [NHBubbleMaskProvider defaultOutgoingBubble];
+        }
+        else {
+            self.messageMaskView.image = self.hasTail
+            ? [NHBubbleMaskProvider defaultIncomingTailBubble]
+            : [NHBubbleMaskProvider defaultIncomingBubble];
+        }
+    }
+    else {
+        self.messageMaskView.image = self.maskImage;
+    }
+}
+
+- (void)setupViews {
+    self.contentView.opaque = YES;
+    self.contentView.clipsToBounds = YES;
+
+    self.messageContainer = [[UIView alloc] init];
+    [self.messageContainer setTranslatesAutoresizingMaskIntoConstraints:NO];
+    self.messageContainer.opaque = YES;
+    self.messageContainer.clipsToBounds = YES;
+    self.messageContainer.backgroundColor = [UIColor redColor];
+    [self.contentView addSubview:self.messageContainer];
+
+    self.minMessageHeight = [NSLayoutConstraint constraintWithItem:self.messageContainer
+                                                        attribute:NSLayoutAttributeHeight
+                                                        relatedBy:NSLayoutRelationGreaterThanOrEqual
+                                                           toItem:self.messageContainer
+                                                        attribute:NSLayoutAttributeHeight
+                                                       multiplier:0 constant:35];
+
+    [self.messageContainer addConstraint:self.minMessageHeight];
+
+
+    self.minMessageWidth = [NSLayoutConstraint constraintWithItem:self.messageContainer
+                                                        attribute:NSLayoutAttributeWidth
+                                                        relatedBy:NSLayoutRelationGreaterThanOrEqual
+                                                           toItem:self.messageContainer
+                                                        attribute:NSLayoutAttributeWidth
+                                                       multiplier:0 constant:35];
+
+    [self.messageContainer addConstraint:self.minMessageWidth];
+
+
+    self.topMessageOffset = [NSLayoutConstraint constraintWithItem:self.messageContainer
+                                                                 attribute:NSLayoutAttributeTop
+                                                                 relatedBy:NSLayoutRelationGreaterThanOrEqual
+                                                                    toItem:self.contentView
+                                                                 attribute:NSLayoutAttributeTop
+                                                                multiplier:1.0
+                                                                  constant:0];
+
+
+    self.bottomMessageOffset = [NSLayoutConstraint constraintWithItem:self.messageContainer
+                                                            attribute:NSLayoutAttributeBottom
+                                                            relatedBy:NSLayoutRelationEqual
+                                                               toItem:self.contentView
+                                                            attribute:NSLayoutAttributeBottom
+                                                           multiplier:1.0
+                                                             constant:0];
+
+
+
+    self.leftMessageOffset = [NSLayoutConstraint constraintWithItem:self.messageContainer
+                                                                  attribute:NSLayoutAttributeLeft
+                                                                  relatedBy:NSLayoutRelationEqual
+                                                                     toItem:self.contentView
+                                                                  attribute:NSLayoutAttributeLeft
+                                                                 multiplier:1.0
+                                                                   constant:0];
+
+
+
+    self.rightMessageOffset = [NSLayoutConstraint constraintWithItem:self.messageContainer
+                                                                   attribute:NSLayoutAttributeRight
+                                                                   relatedBy:NSLayoutRelationEqual
+                                                                      toItem:self.contentView
+                                                                   attribute:NSLayoutAttributeRight
+                                                                  multiplier:1.0
+                                                                    constant:0];
+
+
+
+    self.messageMaskView = [[UIImageView alloc] init];
+
+    if (self.bubbleType == NHMessageBubbleTypeOutgoing) {
+        self.leftMessageOffset.priority = kNHDisabledConstraintPriority;
+        self.rightMessageOffset.priority = kNHEnabledConstraintPriority;
+    }
+    else {
+        self.rightMessageOffset.priority = kNHDisabledConstraintPriority;
+        self.leftMessageOffset.priority = kNHEnabledConstraintPriority;
+    }
+
+    [self setupMaskImage];
+    self.messageContainer.layer.mask = self.messageMaskView.layer;
+
+    [self.contentView addConstraint:self.topMessageOffset];
+    [self.contentView addConstraint:self.bottomMessageOffset];
+    [self.contentView addConstraint:self.leftMessageOffset];
+    [self.contentView addConstraint:self.rightMessageOffset];
+
+    {
+        UILabel *messageLabel = [[UILabel alloc] init];
+        messageLabel.opaque = YES;
+        [messageLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
+        messageLabel.backgroundColor = [UIColor greenColor];
+        messageLabel.lineBreakMode = NSLineBreakByWordWrapping;
+        messageLabel.text = @"dsa das das das";
+        messageLabel.numberOfLines = 0;
+
+        [self.messageContainer addSubview:messageLabel];
+
+        [messageLabel addConstraint:[NSLayoutConstraint constraintWithItem:messageLabel
+                                                                 attribute:NSLayoutAttributeWidth
+                                                                 relatedBy:NSLayoutRelationLessThanOrEqual
+                                                                    toItem:messageLabel
+                                                                 attribute:NSLayoutAttributeWidth
+                                                                multiplier:0 constant:200]];
+
+        [self.messageContainer addConstraint:[NSLayoutConstraint constraintWithItem:messageLabel
+                                                                          attribute:NSLayoutAttributeLeft
+                                                                          relatedBy:NSLayoutRelationEqual
+                                                                             toItem:self.messageContainer
+                                                                          attribute:NSLayoutAttributeLeft
+                                                                         multiplier:1.0
+                                                                           constant:5]];
+
+        [self.messageContainer addConstraint:[NSLayoutConstraint constraintWithItem:messageLabel
+                                                                          attribute:NSLayoutAttributeRight
+                                                                          relatedBy:NSLayoutRelationEqual
+                                                                             toItem:self.messageContainer
+                                                                          attribute:NSLayoutAttributeRight
+                                                                         multiplier:1.0
+                                                                           constant:-10]];
+
+        [self.messageContainer addConstraint:[NSLayoutConstraint constraintWithItem:messageLabel
+                                                                          attribute:NSLayoutAttributeTop
+                                                                          relatedBy:NSLayoutRelationEqual
+                                                                             toItem:self.messageContainer
+                                                                          attribute:NSLayoutAttributeTop
+                                                                         multiplier:1.0
+                                                                           constant:5]];
+
+        [self.messageContainer addConstraint:[NSLayoutConstraint constraintWithItem:messageLabel
+                                                                          attribute:NSLayoutAttributeBottom
+                                                                          relatedBy:NSLayoutRelationEqual
+                                                                             toItem:self.messageContainer
+                                                                          attribute:NSLayoutAttributeBottom
+                                                                         multiplier:1.0
+                                                                           constant:-5]];
+
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            self.bubbleType = NHMessageBubbleTypeIncoming;
+            self.hasTail = YES;
+        });
+    }
+
+
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+
+    [self resetMask];
+}
+
+- (void)prepareForReuse {
+    [super prepareForReuse];
+}
+
+- (void)setBubbleType:(NHMessageBubbleType)bubbleType {
+    if (bubbleType != _bubbleType) {
+        [self willChangeValueForKey:@"bubbleType"];
+        _bubbleType = bubbleType;
+
+        [self.contentView removeConstraints:@[self.leftMessageOffset, self.rightMessageOffset]];
+
+        if (bubbleType == NHMessageBubbleTypeOutgoing) {
+            self.leftMessageOffset.priority = kNHDisabledConstraintPriority;
+            self.rightMessageOffset.priority = kNHEnabledConstraintPriority;
+        }
+        else {
+            self.rightMessageOffset.priority = kNHDisabledConstraintPriority;
+            self.leftMessageOffset.priority = kNHEnabledConstraintPriority;
+        }
+
+        [self setupMaskImage];
+        [self.contentView addConstraints:@[self.leftMessageOffset, self.rightMessageOffset]];
+        [self.contentView setNeedsLayout];
+//        [self resetMask];
+
+        [self didChangeValueForKey:@"bubbleType"];
+    }
+}
+
+- (void)setHasTail:(BOOL)hasTail {
+    if (_hasTail != hasTail) {
+        [self willChangeValueForKey:@"hasTail"];
+        _hasTail = hasTail;
+
+        [self setupMaskImage];
+        [self didChangeValueForKey:@"hasTail"];
+    }
+}
+
+- (void)resetMask {
+    if (!CGRectEqualToRect(self.messageMaskView.frame, self.messageContainer.bounds)) {
+        self.messageMaskView.frame = self.messageContainer.bounds;
+
+    }
+}
+
+@end

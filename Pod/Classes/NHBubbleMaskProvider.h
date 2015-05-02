@@ -6,8 +6,14 @@
 //
 //
 
-#import <Foundation/Foundation.h>
+@import UIKit;
 
 @interface NHBubbleMaskProvider : NSObject
+
++ (UIImage*)defaultOutgoingBubble;
++ (UIImage*)defaultIncomingBubble;
+
++ (UIImage*)defaultOutgoingTailBubble;
++ (UIImage*)defaultIncomingTailBubble;
 
 @end

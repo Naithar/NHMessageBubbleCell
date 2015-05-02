@@ -10,4 +10,55 @@
 
 @implementation NHBubbleMaskProvider
 
++ (UIImage*)defaultOutgoingBubble {
+    static dispatch_once_t token;
+    __strong static UIImage* outgoingMask = nil;
+    dispatch_once(&token, ^{
+        outgoingMask = [[UIImage imageNamed:@"mask.bubble"]
+                        resizableImageWithCapInsets:UIEdgeInsetsMake(16, 15, 16, 25)
+                        resizingMode:UIImageResizingModeStretch];
+    });
+
+    return outgoingMask;
+}
+
++ (UIImage*)defaultOutgoingTailBubble {
+    static dispatch_once_t token;
+    __strong static UIImage* outgoingMask = nil;
+    dispatch_once(&token, ^{
+        outgoingMask = [[UIImage imageNamed:@"mask.bubble-tail"]
+                        resizableImageWithCapInsets:UIEdgeInsetsMake(16, 15, 16, 25)
+                        resizingMode:UIImageResizingModeStretch];
+    });
+
+    return outgoingMask;
+}
+
++ (UIImage*)defaultIncomingBubble {
+    static dispatch_once_t token;
+    __strong static UIImage* incomingMask = nil;
+    dispatch_once(&token, ^{
+        UIImage *image = [UIImage imageNamed:@"mask.bubble"];
+        incomingMask = [[[UIImage alloc] initWithCGImage:image.CGImage scale:image.scale orientation:UIImageOrientationUpMirrored]
+                        resizableImageWithCapInsets:UIEdgeInsetsMake(16, 15, 16, 25)
+                        resizingMode:UIImageResizingModeStretch];
+    });
+
+
+    return incomingMask;
+}
+
++ (UIImage*)defaultIncomingTailBubble {
+    static dispatch_once_t token;
+    __strong static UIImage* incomingMask = nil;
+    dispatch_once(&token, ^{
+        UIImage *image = [UIImage imageNamed:@"mask.bubble-tail"];
+        incomingMask = [[[UIImage alloc] initWithCGImage:image.CGImage scale:image.scale orientation:UIImageOrientationUpMirrored]
+                        resizableImageWithCapInsets:UIEdgeInsetsMake(16, 15, 16, 25)
+                        resizingMode:UIImageResizingModeStretch];
+    });
+
+    return incomingMask;
+}
+
 @end
