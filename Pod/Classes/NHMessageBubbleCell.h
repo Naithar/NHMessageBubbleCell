@@ -32,8 +32,9 @@ typedef NS_ENUM(NSUInteger, NHMessageBubbleType) {
 
 
 - (void)setupBubble;
+- (void)setupViews;
 - (void)reset;
-- (void)refreshData:(id)data;
-+ (CGFloat)rowHeightOnData:(id)data;
+- (void)reloadWithData:(id)data;
++ (CGFloat)heightForRowWithData:(id)data;
 
 @end

@@ -133,7 +133,6 @@ const NSUInteger kNHEnabledConstraintPriority = 900;
 
     [self.messageContainer addConstraint:self.minMessageWidth];
 
-
     self.topMessageOffset = [NSLayoutConstraint constraintWithItem:self.messageContainer
                                                                  attribute:NSLayoutAttributeTop
                                                                  relatedBy:NSLayoutRelationGreaterThanOrEqual
@@ -289,11 +288,11 @@ const NSUInteger kNHEnabledConstraintPriority = 900;
     self.selectionStyle = UITableViewCellSelectionStyleNone;
 }
 
-- (void)refreshData:(id)data {
+- (void)reloadWithData:(id)data {
 
 }
 
-+ (CGFloat)rowHeightOnData:(id)data {
++ (CGFloat)heightForRowWithData:(id)data {
     return 44;
 }
 
