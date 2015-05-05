@@ -73,8 +73,6 @@ const NSUInteger kNHEnabledConstraintPriority = 900;
 }
 
 - (void)awakeFromNib {
-//    [self setupBubble];
-//    [self setupViews];
 }
 
 - (void)setupBubble {
@@ -85,7 +83,6 @@ const NSUInteger kNHEnabledConstraintPriority = 900;
 }
 
 - (void)setupMaskImage {
-
     if (!self.maskImage) {
         if (self.bubbleType == NHMessageBubbleTypeOutgoing) {
             self.messageMaskView.image = self.hasTail
@@ -99,19 +96,22 @@ const NSUInteger kNHEnabledConstraintPriority = 900;
         }
     }
     else {
-        self.messageMaskView.image = self.maskImage;
+        self.messageMaskView.image = self.hasTail
+        ? self.tailMaskImage
+        : self.maskImage;
     }
 }
 
 - (void)setupViews {
     self.contentView.opaque = YES;
+    self.selectionStyle = UITableViewCellSelectionStyleNone;
     self.contentView.clipsToBounds = YES;
 
     self.messageContainer = [[UIView alloc] init];
     [self.messageContainer setTranslatesAutoresizingMaskIntoConstraints:NO];
     self.messageContainer.opaque = YES;
     self.messageContainer.clipsToBounds = YES;
-    self.messageContainer.backgroundColor = [UIColor redColor];
+    self.messageContainer.backgroundColor = self.bubbleColor ?: [UIColor groupTableViewBackgroundColor];
     [self.contentView addSubview:self.messageContainer];
 
     self.minMessageHeight = [NSLayoutConstraint constraintWithItem:self.messageContainer
@@ -192,76 +192,18 @@ const NSUInteger kNHEnabledConstraintPriority = 900;
     [self.contentView addConstraint:self.leftMessageOffset];
     [self.contentView addConstraint:self.rightMessageOffset];
 
-    {
-        UILabel *messageLabel = [[UILabel alloc] init];
-        messageLabel.opaque = YES;
-        [messageLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
-        messageLabel.backgroundColor = [UIColor greenColor];
-        messageLabel.lineBreakMode = NSLineBreakByWordWrapping;
-        messageLabel.text = @"d";
-        messageLabel.numberOfLines = 0;
-
-        [self.messageContainer addSubview:messageLabel];
-
-        [messageLabel addConstraint:[NSLayoutConstraint constraintWithItem:messageLabel
-                                                                 attribute:NSLayoutAttributeWidth
-                                                                 relatedBy:NSLayoutRelationLessThanOrEqual
-                                                                    toItem:messageLabel
-                                                                 attribute:NSLayoutAttributeWidth
-                                                                multiplier:0 constant:200]];
-
-        [self.messageContainer addConstraint:[NSLayoutConstraint constraintWithItem:messageLabel
-                                                                          attribute:NSLayoutAttributeLeft
-                                                                          relatedBy:NSLayoutRelationEqual
-                                                                             toItem:self.messageContainer
-                                                                          attribute:NSLayoutAttributeLeft
-                                                                         multiplier:1.0
-                                                                           constant:5]];
-
-        [self.messageContainer addConstraint:[NSLayoutConstraint constraintWithItem:messageLabel
-                                                                          attribute:NSLayoutAttributeRight
-                                                                          relatedBy:NSLayoutRelationEqual
-                                                                             toItem:self.messageContainer
-                                                                          attribute:NSLayoutAttributeRight
-                                                                         multiplier:1.0
-                                                                           constant:-10]];
-
-        [self.messageContainer addConstraint:[NSLayoutConstraint constraintWithItem:messageLabel
-                                                                          attribute:NSLayoutAttributeTop
-                                                                          relatedBy:NSLayoutRelationEqual
-                                                                             toItem:self.messageContainer
-                                                                          attribute:NSLayoutAttributeTop
-                                                                         multiplier:1.0
-                                                                           constant:5]];
-
-        [self.messageContainer addConstraint:[NSLayoutConstraint constraintWithItem:messageLabel
-                                                                          attribute:NSLayoutAttributeBottom
-                                                                          relatedBy:NSLayoutRelationEqual
-                                                                             toItem:self.messageContainer
-                                                                          attribute:NSLayoutAttributeBottom
-                                                                         multiplier:1.0
-                                                                           constant:-5]];
-
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            self.bubbleType = NHMessageBubbleTypeIncoming;
-            self.hasTail = YES;
-        });
-    }
-
-
     [self setNeedsLayout];
-    [self layoutIfNeeded];
-    [self resetMask];
 }
 
-- (void)layoutSubviews {
-    [super layoutSubviews];
-
+- (void)layoutIfNeeded {
+    [super layoutIfNeeded];
     [self resetMask];
 }
 
 - (void)prepareForReuse {
     [super prepareForReuse];
+
+    [self reset];
 }
 
 - (void)setBubbleType:(NHMessageBubbleType)bubbleType {
@@ -282,8 +224,9 @@ const NSUInteger kNHEnabledConstraintPriority = 900;
 
         [self setupMaskImage];
         [self.contentView addConstraints:@[self.leftMessageOffset, self.rightMessageOffset]];
-        [self.contentView setNeedsLayout];
-//        [self resetMask];
+
+        [self setNeedsLayout];
+        [self layoutIfNeeded];
 
         [self didChangeValueForKey:@"bubbleType"];
     }
@@ -294,7 +237,9 @@ const NSUInteger kNHEnabledConstraintPriority = 900;
         [self willChangeValueForKey:@"hasTail"];
         _hasTail = hasTail;
 
-        [self setupMaskImage];
+        [self setNeedsLayout];
+        [self layoutIfNeeded];
+
         [self didChangeValueForKey:@"hasTail"];
     }
 }
@@ -308,6 +253,9 @@ const NSUInteger kNHEnabledConstraintPriority = 900;
     self.rightMessageOffset.constant = -messageContainerInset.right;
     self.bottomMessageOffset.constant = -messageContainerInset.bottom;
 
+    [self setNeedsLayout];
+    [self layoutIfNeeded];
+
     [self didChangeValueForKey:@"messageContainerInset"];
 }
 
@@ -318,14 +266,35 @@ const NSUInteger kNHEnabledConstraintPriority = 900;
     self.minMessageWidth.constant = minMessageContainerSize.width;
     self.minMessageHeight.constant = minMessageContainerSize.height;
 
+    [self setNeedsLayout];
+    [self layoutIfNeeded];
+
     [self didChangeValueForKey:@"minMessageContainerSize"];
+}
+
+- (void)setBubbleColor:(UIColor *)bubbleColor {
+    [self willChangeValueForKey:@"bubbleColor"];
+    _bubbleColor = bubbleColor;
+    self.messageContainer.backgroundColor = bubbleColor ?: [UIColor groupTableViewBackgroundColor];
+    [self didChangeValueForKey:@"bubbleColor"];
 }
 
 - (void)resetMask {
     if (!CGRectEqualToRect(self.messageMaskView.frame, self.messageContainer.bounds)) {
         self.messageMaskView.frame = self.messageContainer.bounds;
-
     }
+}
+
+- (void)reset {
+    self.selectionStyle = UITableViewCellSelectionStyleNone;
+}
+
+- (void)refreshData:(id)data {
+
+}
+
++ (CGFloat)rowHeightOnData:(id)data {
+    return 44;
 }
 
 @end

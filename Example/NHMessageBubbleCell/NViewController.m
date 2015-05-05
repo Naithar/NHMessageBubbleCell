@@ -23,7 +23,7 @@
 
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
-    self.tableView.rowHeight = 100;
+//    self.tableView.rowHeight = 100;
     [self.tableView registerClass:[NHMessageBubbleCell class] forCellReuseIdentifier:@"cell"];
 }
 
@@ -43,11 +43,13 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
-
-//    [cell.contentView setNeedsLayout];
-//    [cell.contentView layoutIfNeeded];
 //    cell.textLabel.text = [NSString stringWithFormat:@"%@", indexPath];
     return cell;
+}
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    [cell setNeedsLayout];
+    [cell layoutIfNeeded];
 }
 
 @end
