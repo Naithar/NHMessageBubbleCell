@@ -199,6 +199,11 @@ const NSUInteger kNHEnabledConstraintPriority = 900;
     [self resetMask];
 }
 
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    [self resetMask];
+}
+
 - (void)prepareForReuse {
     [super prepareForReuse];
 
