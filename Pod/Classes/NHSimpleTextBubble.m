@@ -39,6 +39,7 @@
     self.messageLabel.opaque = YES;
     self.messageLabel.numberOfLines = 0;
     self.messageLabel.text = nil;
+    self.messageLabel.preferredMaxLayoutWidth = self.maxLabelWidth;
     self.messageLabel.textAlignment = self.bubbleType == NHMessageBubbleTypeOutgoing ? NSTextAlignmentRight : NSTextAlignmentLeft;
 
     [self.messageContainer addSubview:self.messageLabel];
@@ -103,6 +104,7 @@
     [self willChangeValueForKey:@"maxLabelWidth"];
     _maxLabelWidth = maxLabelWidth;
 
+    self.messageLabel.preferredMaxLayoutWidth = maxLabelWidth;
     self.labelWidth.constant = maxLabelWidth;
     [self didChangeValueForKey:@"maxLabelWidth"];
 }
