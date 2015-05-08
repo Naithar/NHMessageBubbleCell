@@ -215,15 +215,18 @@ const NSUInteger kNHEnabledConstraintPriority = 900;
         [self willChangeValueForKey:@"bubbleType"];
         _bubbleType = bubbleType;
 
-        [self.contentView removeConstraints:@[self.leftMessageOffset, self.rightMessageOffset]];
+        if (self.leftMessageOffset
+            && self.rightMessageOffset) {
+            [self.contentView removeConstraints:@[self.leftMessageOffset, self.rightMessageOffset]];
 
-        if (bubbleType == NHMessageBubbleTypeOutgoing) {
-            self.leftMessageOffset.priority = kNHDisabledConstraintPriority;
-            self.rightMessageOffset.priority = kNHEnabledConstraintPriority;
-        }
-        else {
-            self.rightMessageOffset.priority = kNHDisabledConstraintPriority;
-            self.leftMessageOffset.priority = kNHEnabledConstraintPriority;
+            if (bubbleType == NHMessageBubbleTypeOutgoing) {
+                self.leftMessageOffset.priority = kNHDisabledConstraintPriority;
+                self.rightMessageOffset.priority = kNHEnabledConstraintPriority;
+            }
+            else {
+                self.rightMessageOffset.priority = kNHDisabledConstraintPriority;
+                self.leftMessageOffset.priority = kNHEnabledConstraintPriority;
+            }
         }
 
         [self setupMaskImage];
