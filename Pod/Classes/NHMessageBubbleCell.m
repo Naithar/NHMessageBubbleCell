@@ -16,7 +16,7 @@ const NSUInteger kNHEnabledConstraintPriority = 900;
 @property (nonatomic, strong) UIView *messageContainer;
 @property (nonatomic, strong) UIImageView *messageMaskView;
 
-@property (nonatomic, strong) NSLayoutConstraint *topMessageOffset;
+//@property (nonatomic, strong) NSLayoutConstraint *topMessageOffset;
 @property (nonatomic, strong) NSLayoutConstraint *leftMessageOffset;
 @property (nonatomic, strong) NSLayoutConstraint *rightMessageOffset;
 @property (nonatomic, strong) NSLayoutConstraint *bottomMessageOffset;
@@ -132,15 +132,15 @@ const NSUInteger kNHEnabledConstraintPriority = 900;
                                                        multiplier:0 constant:self.minMessageContainerSize.width];
 
     [self.messageContainer addConstraint:self.minMessageWidth];
-
-    self.topMessageOffset = [NSLayoutConstraint constraintWithItem:self.messageContainer
-                                                                 attribute:NSLayoutAttributeTop
-                                                                 relatedBy:NSLayoutRelationGreaterThanOrEqual
-                                                                    toItem:self.contentView
-                                                                 attribute:NSLayoutAttributeTop
-                                                                multiplier:1.0
-                                                                  constant:self.messageContainerInset.top];
-
+//
+//    self.topMessageOffset = [NSLayoutConstraint constraintWithItem:self.messageContainer
+//                                                                 attribute:NSLayoutAttributeTop
+//                                                                 relatedBy:NSLayoutRelationGreaterThanOrEqual
+//                                                                    toItem:self.contentView
+//                                                                 attribute:NSLayoutAttributeTop
+//                                                                multiplier:1.0
+//                                                                  constant:self.messageContainerInset.top];
+//
 
     self.bottomMessageOffset = [NSLayoutConstraint constraintWithItem:self.messageContainer
                                                             attribute:NSLayoutAttributeBottom
@@ -186,7 +186,7 @@ const NSUInteger kNHEnabledConstraintPriority = 900;
     [self setupMaskImage];
     self.messageContainer.layer.mask = self.messageMaskView.layer;
 
-    [self.contentView addConstraint:self.topMessageOffset];
+//    [self.contentView addConstraint:self.topMessageOffset];
     [self.contentView addConstraint:self.bottomMessageOffset];
     [self.contentView addConstraint:self.leftMessageOffset];
     [self.contentView addConstraint:self.rightMessageOffset];
@@ -255,7 +255,7 @@ const NSUInteger kNHEnabledConstraintPriority = 900;
     [self willChangeValueForKey:@"messageContainerInset"];
     _messageContainerInset = messageContainerInset;
 
-    self.topMessageOffset.constant = messageContainerInset.top;
+//    self.topMessageOffset.constant = messageContainerInset.top;
     self.leftMessageOffset.constant = messageContainerInset.left;
     self.rightMessageOffset.constant = -messageContainerInset.right;
     self.bottomMessageOffset.constant = -messageContainerInset.bottom;
