@@ -244,8 +244,9 @@ const NSUInteger kNHEnabledConstraintPriority = 900;
         [self willChangeValueForKey:@"hasTail"];
         _hasTail = hasTail;
 
-        [self setNeedsLayout];
-        [self layoutIfNeeded];
+        [self setupMaskImage];
+//        [self setNeedsLayout];
+//        [self layoutIfNeeded];
 
         [self didChangeValueForKey:@"hasTail"];
     }
