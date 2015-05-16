@@ -232,8 +232,10 @@ const NSUInteger kNHEnabledConstraintPriority = 900;
         [self setupMaskImage];
         [self.contentView addConstraints:@[self.leftMessageOffset, self.rightMessageOffset]];
 
-        [self setNeedsLayout];
-        [self layoutIfNeeded];
+        [UIView performWithoutAnimation:^{
+            [self.superview setNeedsLayout];
+            [self.superview layoutIfNeeded];
+        }];
 
         [self didChangeValueForKey:@"bubbleType"];
     }
@@ -274,8 +276,10 @@ const NSUInteger kNHEnabledConstraintPriority = 900;
     self.minMessageWidth.constant = minMessageContainerSize.width;
     self.minMessageHeight.constant = minMessageContainerSize.height;
 
-    [self setNeedsLayout];
-    [self layoutIfNeeded];
+    [UIView performWithoutAnimation:^{
+        [self.superview setNeedsLayout];
+        [self.superview layoutIfNeeded];
+    }];
 
     [self didChangeValueForKey:@"minMessageContainerSize"];
 }
