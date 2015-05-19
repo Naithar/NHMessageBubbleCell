@@ -188,6 +188,7 @@ const NSUInteger kNHEnabledConstraintPriority = 900;
     self.messageMaskView = [[UIImageView alloc] init];
     self.shadowLayer = [CALayer layer];
     self.shadowMaskView = [[UIImageView alloc] init];
+    self.shadowLayer.shadowOffset = CGSizeMake(0.f, 0.f);
 
     if (self.bubbleType == NHMessageBubbleTypeOutgoing) {
         self.leftMessageOffset.priority = kNHDisabledConstraintPriority;
