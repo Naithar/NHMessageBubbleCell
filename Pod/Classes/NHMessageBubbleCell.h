@@ -26,6 +26,9 @@ typedef NS_ENUM(NSUInteger, NHMessageBubbleType) {
 
 @property (nonatomic, strong) UIColor *bubbleColor;
 
+@property (nonatomic, readonly, strong) CALayer *shadowLayer;
+@property (nonatomic, assign) UIEdgeInsets shadowInsets;
+
 @property (nonatomic, strong) UIImage *maskImage;
 @property (nonatomic, strong) UIImage *tailMaskImage;
 @property (nonatomic, readonly, strong) UIView *messageContainer;

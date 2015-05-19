@@ -23,6 +23,9 @@ const NSUInteger kNHEnabledConstraintPriority = 900;
 @property (nonatomic, strong) NSLayoutConstraint *minMessageHeight;
 @property (nonatomic, strong) NSLayoutConstraint *minMessageWidth;
 
+@property (nonatomic, strong) CALayer *shadowLayer;
+@property (nonatomic, strong) UIImageView *shadowMaskView;
+
 @end
 
 @implementation NHMessageBubbleCell
@@ -80,6 +83,7 @@ const NSUInteger kNHEnabledConstraintPriority = 900;
     _hasTail = NO;
     _messageContainerInset = UIEdgeInsetsZero;
     _minMessageContainerSize = CGSizeMake(40, 35);
+    _shadowInsets = UIEdgeInsetsMake(1, 1.5, 1, 1.5);
 }
 
 - (void)setupMaskImage {
@@ -88,15 +92,24 @@ const NSUInteger kNHEnabledConstraintPriority = 900;
             self.messageMaskView.image = self.hasTail
             ? [NHBubbleMaskProvider defaultOutgoingTailBubble]
             : [NHBubbleMaskProvider defaultOutgoingBubble];
+            self.shadowMaskView.image = self.hasTail
+            ? [NHBubbleMaskProvider defaultOutgoingTailBubble]
+            : [NHBubbleMaskProvider defaultOutgoingBubble];
         }
         else {
             self.messageMaskView.image = self.hasTail
+            ? [NHBubbleMaskProvider defaultIncomingTailBubble]
+            : [NHBubbleMaskProvider defaultIncomingBubble];
+            self.shadowMaskView.image = self.hasTail
             ? [NHBubbleMaskProvider defaultIncomingTailBubble]
             : [NHBubbleMaskProvider defaultIncomingBubble];
         }
     }
     else {
         self.messageMaskView.image = self.hasTail
+        ? self.tailMaskImage
+        : self.maskImage;
+        self.shadowMaskView.image = self.hasTail
         ? self.tailMaskImage
         : self.maskImage;
     }
@@ -173,6 +186,8 @@ const NSUInteger kNHEnabledConstraintPriority = 900;
 
 
     self.messageMaskView = [[UIImageView alloc] init];
+    self.shadowLayer = [CALayer layer];
+    self.shadowMaskView = [[UIImageView alloc] init];
 
     if (self.bubbleType == NHMessageBubbleTypeOutgoing) {
         self.leftMessageOffset.priority = kNHDisabledConstraintPriority;
@@ -186,7 +201,10 @@ const NSUInteger kNHEnabledConstraintPriority = 900;
     [self setupMaskImage];
     self.messageContainer.layer.mask = self.messageMaskView.layer;
 
-//    [self.contentView addConstraint:self.topMessageOffset];
+    [self.shadowLayer addSublayer:self.shadowMaskView.layer];
+    [self.contentView.layer insertSublayer:self.shadowLayer below:self.messageContainer.layer];
+
+    
     [self.contentView addConstraint:self.bottomMessageOffset];
     [self.contentView addConstraint:self.leftMessageOffset];
     [self.contentView addConstraint:self.rightMessageOffset];
@@ -231,12 +249,13 @@ const NSUInteger kNHEnabledConstraintPriority = 900;
             [self.contentView addConstraints:@[self.leftMessageOffset, self.rightMessageOffset]];
         }
 
-        [self setupMaskImage];
-
         [UIView performWithoutAnimation:^{
             [self.superview setNeedsLayout];
             [self.superview layoutIfNeeded];
         }];
+
+        [self setupMaskImage];
+        [self resetMask];
 
         [self didChangeValueForKey:@"bubbleType"];
     }
@@ -297,6 +316,10 @@ const NSUInteger kNHEnabledConstraintPriority = 900;
 - (void)resetMask {
     if (!CGRectEqualToRect(self.messageMaskView.frame, self.messageContainer.bounds)) {
         self.messageMaskView.frame = self.messageContainer.bounds;
+    }
+
+    if (!CGRectEqualToRect(self.shadowMaskView.frame, self.messageContainer.frame)) {
+        self.shadowMaskView.frame = UIEdgeInsetsInsetRect(self.messageContainer.frame, self.shadowInsets);
     }
 }
 
