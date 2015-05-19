@@ -227,10 +227,11 @@ const NSUInteger kNHEnabledConstraintPriority = 900;
                 self.rightMessageOffset.priority = kNHDisabledConstraintPriority;
                 self.leftMessageOffset.priority = kNHEnabledConstraintPriority;
             }
+            
+            [self.contentView addConstraints:@[self.leftMessageOffset, self.rightMessageOffset]];
         }
 
         [self setupMaskImage];
-        [self.contentView addConstraints:@[self.leftMessageOffset, self.rightMessageOffset]];
 
         [UIView performWithoutAnimation:^{
             [self.superview setNeedsLayout];
