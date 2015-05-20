@@ -116,7 +116,7 @@ const NSUInteger kNHEnabledConstraintPriority = 900;
 }
 
 - (void)setupViews {
-    self.contentView.backgroundColor = [UIColor whiteColor];
+    self.contentView.backgroundColor = self.contentView.backgroundColor ?: [UIColor whiteColor];
     self.contentView.opaque = YES;
     self.selectionStyle = UITableViewCellSelectionStyleNone;
     self.contentView.clipsToBounds = NO;
