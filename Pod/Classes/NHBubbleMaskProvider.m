@@ -14,9 +14,9 @@
     static dispatch_once_t token;
     __strong static UIImage* outgoingMask = nil;
     dispatch_once(&token, ^{
-        outgoingMask = [[UIImage imageNamed:@"mask.bubble.png"]
+        outgoingMask = [[[UIImage imageNamed:@"mask.outgoing.bubble.png"]
                         resizableImageWithCapInsets:UIEdgeInsetsMake(16, 15, 16, 25)
-                        resizingMode:UIImageResizingModeStretch];
+                        resizingMode:UIImageResizingModeStretch] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     });
 
     return outgoingMask;
@@ -26,9 +26,9 @@
     static dispatch_once_t token;
     __strong static UIImage* outgoingMask = nil;
     dispatch_once(&token, ^{
-        outgoingMask = [[UIImage imageNamed:@"mask.bubble-tail.png"]
+        outgoingMask = [[[UIImage imageNamed:@"mask.outgoing.bubble-tail.png"]
                         resizableImageWithCapInsets:UIEdgeInsetsMake(16, 15, 16, 25)
-                        resizingMode:UIImageResizingModeStretch];
+                        resizingMode:UIImageResizingModeStretch] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     });
 
     return outgoingMask;
@@ -38,10 +38,9 @@
     static dispatch_once_t token;
     __strong static UIImage* incomingMask = nil;
     dispatch_once(&token, ^{
-        UIImage *image = [UIImage imageNamed:@"mask.bubble.png"];
-        incomingMask = [[[UIImage alloc] initWithCGImage:image.CGImage scale:image.scale orientation:UIImageOrientationUpMirrored]
-                        resizableImageWithCapInsets:UIEdgeInsetsMake(16, 15, 16, 25)
-                        resizingMode:UIImageResizingModeStretch];
+        incomingMask = [[[UIImage imageNamed:@"mask.incoming.bubble.png"]
+                        resizableImageWithCapInsets:UIEdgeInsetsMake(16, 25, 16, 15)
+                        resizingMode:UIImageResizingModeStretch] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     });
 
 
@@ -52,10 +51,9 @@
     static dispatch_once_t token;
     __strong static UIImage* incomingMask = nil;
     dispatch_once(&token, ^{
-        UIImage *image = [UIImage imageNamed:@"mask.bubble-tail.png"];
-        incomingMask = [[[UIImage alloc] initWithCGImage:image.CGImage scale:image.scale orientation:UIImageOrientationUpMirrored]
-                        resizableImageWithCapInsets:UIEdgeInsetsMake(16, 15, 16, 25)
-                        resizingMode:UIImageResizingModeStretch];
+        incomingMask = [[[UIImage imageNamed:@"mask.incoming.bubble-tail.png"]
+                        resizableImageWithCapInsets:UIEdgeInsetsMake(16, 25, 16, 15)
+                        resizingMode:UIImageResizingModeStretch] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     });
 
     return incomingMask;

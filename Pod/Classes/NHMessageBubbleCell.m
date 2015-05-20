@@ -116,9 +116,10 @@ const NSUInteger kNHEnabledConstraintPriority = 900;
 }
 
 - (void)setupViews {
+    self.contentView.backgroundColor = [UIColor whiteColor];
     self.contentView.opaque = YES;
     self.selectionStyle = UITableViewCellSelectionStyleNone;
-    self.contentView.clipsToBounds = YES;
+    self.contentView.clipsToBounds = NO;
 
     self.messageContainer = [[UIView alloc] init];
     [self.messageContainer setTranslatesAutoresizingMaskIntoConstraints:NO];
@@ -128,11 +129,11 @@ const NSUInteger kNHEnabledConstraintPriority = 900;
     [self.contentView addSubview:self.messageContainer];
 
     self.minMessageHeight = [NSLayoutConstraint constraintWithItem:self.messageContainer
-                                                        attribute:NSLayoutAttributeHeight
-                                                        relatedBy:NSLayoutRelationGreaterThanOrEqual
-                                                           toItem:self.messageContainer
-                                                        attribute:NSLayoutAttributeHeight
-                                                       multiplier:0 constant:self.minMessageContainerSize.height];
+                                                         attribute:NSLayoutAttributeHeight
+                                                         relatedBy:NSLayoutRelationGreaterThanOrEqual
+                                                            toItem:self.messageContainer
+                                                         attribute:NSLayoutAttributeHeight
+                                                        multiplier:0 constant:self.minMessageContainerSize.height];
 
     [self.messageContainer addConstraint:self.minMessageHeight];
 
@@ -145,15 +146,15 @@ const NSUInteger kNHEnabledConstraintPriority = 900;
                                                        multiplier:0 constant:self.minMessageContainerSize.width];
 
     [self.messageContainer addConstraint:self.minMessageWidth];
-//
-//    self.topMessageOffset = [NSLayoutConstraint constraintWithItem:self.messageContainer
-//                                                                 attribute:NSLayoutAttributeTop
-//                                                                 relatedBy:NSLayoutRelationGreaterThanOrEqual
-//                                                                    toItem:self.contentView
-//                                                                 attribute:NSLayoutAttributeTop
-//                                                                multiplier:1.0
-//                                                                  constant:self.messageContainerInset.top];
-//
+    //
+    //    self.topMessageOffset = [NSLayoutConstraint constraintWithItem:self.messageContainer
+    //                                                                 attribute:NSLayoutAttributeTop
+    //                                                                 relatedBy:NSLayoutRelationGreaterThanOrEqual
+    //                                                                    toItem:self.contentView
+    //                                                                 attribute:NSLayoutAttributeTop
+    //                                                                multiplier:1.0
+    //                                                                  constant:self.messageContainerInset.top];
+    //
 
     self.bottomMessageOffset = [NSLayoutConstraint constraintWithItem:self.messageContainer
                                                             attribute:NSLayoutAttributeBottom
@@ -166,29 +167,36 @@ const NSUInteger kNHEnabledConstraintPriority = 900;
 
 
     self.leftMessageOffset = [NSLayoutConstraint constraintWithItem:self.messageContainer
-                                                                  attribute:NSLayoutAttributeLeft
-                                                                  relatedBy:NSLayoutRelationEqual
-                                                                     toItem:self.contentView
-                                                                  attribute:NSLayoutAttributeLeft
-                                                                 multiplier:1.0
-                                                                   constant:self.messageContainerInset.left];
+                                                          attribute:NSLayoutAttributeLeft
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:self.contentView
+                                                          attribute:NSLayoutAttributeLeft
+                                                         multiplier:1.0
+                                                           constant:self.messageContainerInset.left];
 
 
 
     self.rightMessageOffset = [NSLayoutConstraint constraintWithItem:self.messageContainer
-                                                                   attribute:NSLayoutAttributeRight
-                                                                   relatedBy:NSLayoutRelationEqual
-                                                                      toItem:self.contentView
-                                                                   attribute:NSLayoutAttributeRight
-                                                                  multiplier:1.0
-                                                                    constant:-self.messageContainerInset.right];
+                                                           attribute:NSLayoutAttributeRight
+                                                           relatedBy:NSLayoutRelationEqual
+                                                              toItem:self.contentView
+                                                           attribute:NSLayoutAttributeRight
+                                                          multiplier:1.0
+                                                            constant:-self.messageContainerInset.right];
 
 
 
     self.messageMaskView = [[UIImageView alloc] init];
+
     self.shadowLayer = [CALayer layer];
     self.shadowMaskView = [[UIImageView alloc] init];
     self.shadowLayer.shadowOffset = CGSizeMake(0.f, 0.f);
+    self.shadowMaskView.tintColor = self.contentView.backgroundColor;
+
+    self.shadowLayer.shouldRasterize = YES;
+
+    self.messageContainer.layer.shouldRasterize = YES;
+    self.messageContainer.layer.rasterizationScale = [UIScreen mainScreen].scale;
 
     if (self.bubbleType == NHMessageBubbleTypeOutgoing) {
         self.leftMessageOffset.priority = kNHDisabledConstraintPriority;
@@ -205,7 +213,7 @@ const NSUInteger kNHEnabledConstraintPriority = 900;
     [self.shadowLayer addSublayer:self.shadowMaskView.layer];
     [self.contentView.layer insertSublayer:self.shadowLayer below:self.messageContainer.layer];
 
-    
+
     [self.contentView addConstraint:self.bottomMessageOffset];
     [self.contentView addConstraint:self.leftMessageOffset];
     [self.contentView addConstraint:self.rightMessageOffset];
@@ -246,7 +254,7 @@ const NSUInteger kNHEnabledConstraintPriority = 900;
                 self.rightMessageOffset.priority = kNHDisabledConstraintPriority;
                 self.leftMessageOffset.priority = kNHEnabledConstraintPriority;
             }
-            
+
             [self.contentView addConstraints:@[self.leftMessageOffset, self.rightMessageOffset]];
         }
 
@@ -270,18 +278,23 @@ const NSUInteger kNHEnabledConstraintPriority = 900;
         [UIView performWithoutAnimation:^{
             [self setupMaskImage];
         }];
-//        [self setNeedsLayout];
-//        [self layoutIfNeeded];
+        //        [self setNeedsLayout];
+        //        [self layoutIfNeeded];
 
         [self didChangeValueForKey:@"hasTail"];
     }
 }
 
 - (void)setMessageContainerInset:(UIEdgeInsets)messageContainerInset {
+
+    if (UIEdgeInsetsEqualToEdgeInsets(_messageContainerInset, messageContainerInset)) {
+        return;
+    }
+
     [self willChangeValueForKey:@"messageContainerInset"];
     _messageContainerInset = messageContainerInset;
 
-//    self.topMessageOffset.constant = messageContainerInset.top;
+    //    self.topMessageOffset.constant = messageContainerInset.top;
     self.leftMessageOffset.constant = messageContainerInset.left;
     self.rightMessageOffset.constant = -messageContainerInset.right;
     self.bottomMessageOffset.constant = -messageContainerInset.bottom;
@@ -319,8 +332,10 @@ const NSUInteger kNHEnabledConstraintPriority = 900;
         self.messageMaskView.frame = self.messageContainer.bounds;
     }
 
-    if (!CGRectEqualToRect(self.shadowMaskView.frame, self.messageContainer.frame)) {
-        self.shadowMaskView.frame = UIEdgeInsetsInsetRect(self.messageContainer.frame, self.shadowInsets);
+    CGRect shadowRect = UIEdgeInsetsInsetRect(self.messageContainer.frame, self.shadowInsets);
+
+    if (!CGRectEqualToRect(self.shadowMaskView.frame, shadowRect)) {
+        self.shadowMaskView.frame = shadowRect;
     }
 }
 
@@ -329,7 +344,7 @@ const NSUInteger kNHEnabledConstraintPriority = 900;
 }
 
 - (void)reloadWithData:(id)data {
-
+    
 }
 
 + (CGFloat)heightForRowWithData:(id)data {

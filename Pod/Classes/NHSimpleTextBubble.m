@@ -31,6 +31,7 @@
 }
 
 - (void)setupViews {
+    self.contentView.backgroundColor = [UIColor whiteColor];
     [super setupViews];
 
     self.messageLabel = [[UILabel alloc] init];
