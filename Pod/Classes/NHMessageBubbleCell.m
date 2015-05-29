@@ -30,15 +30,15 @@ const NSUInteger kNHEnabledConstraintPriority = 900;
 
 @implementation NHMessageBubbleCell
 
-- (instancetype)init {
-    self = [super init];
-
-    if (self) {
-        [self commonInit];
-    }
-
-    return self;
-}
+//- (instancetype)init {
+//    self = [super init];
+//
+//    if (self) {
+//        [self commonInit];
+//    }
+//
+//    return self;
+//}
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
