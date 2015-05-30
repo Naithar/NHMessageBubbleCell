@@ -231,6 +231,18 @@ const NSUInteger kNHEnabledConstraintPriority = 900;
     [self resetMask];
 }
 
+- (void)setBounds:(CGRect)bounds {
+    [super setBounds:bounds];
+    
+    [self resetMask];
+}
+
+- (void)setFrame:(CGRect)frame {
+    [super setFrame:frame];
+    
+    [self resetMask];
+}
+
 - (void)prepareForReuse {
     [super prepareForReuse];
 
