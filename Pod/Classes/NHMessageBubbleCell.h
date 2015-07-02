@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <NHBubbleMaskProvider.h>
+#import <NHMessageBubbleCell/NHBubbleMaskProvider.h>
 
 extern const NSUInteger kNHDisabledConstraintPriority;
 extern const NSUInteger kNHEnabledConstraintPriority;
