@@ -10,7 +10,7 @@
 
 
 #define image(name) \
-[[UIImage alloc] initWithContentsOfFile: \
+[UIImage imageWithContentsOfFile: \
 [[NSBundle bundleForClass:[NHBubbleMaskProvider class]]\
 pathForResource:name ofType:@"png"]]
 
